@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase-server'
+import PendingApprovals from './PendingApprovals'
 import RosterList from './RosterList'
 
 export default async function AdminRosterPage() {
@@ -8,7 +9,11 @@ export default async function AdminRosterPage() {
     const { data: players } = await supabase
         .from('players')
         .select('*')
-        .order('number', { ascending: true }) // Sort by number initially
+        .order('created_at', { ascending: false }) // Sort by newest first to see imports at top
+
+    // Split into pending and active
+    const pendingPlayers = players?.filter(p => p.status === 'pending') || []
+    const activePlayers = players?.filter(p => p.status !== 'pending') || []
 
     return (
         <div className="space-y-6">
@@ -19,7 +24,12 @@ export default async function AdminRosterPage() {
                 </div>
             </div>
 
-            <RosterList players={players || []} />
+            <PendingApprovals players={pendingPlayers} />
+
+            <div className="border-t border-white/10 pt-8">
+                <h3 className="text-xl font-bold uppercase text-white mb-4">Active Roster</h3>
+                <RosterList players={activePlayers} />
+            </div>
         </div>
     )
 }

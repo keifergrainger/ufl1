@@ -60,5 +60,24 @@ export async function deletePlayer(id: string) {
 
     revalidatePath('/admin/roster')
     revalidatePath('/roster')
+    revalidatePath('/roster')
     return { success: true }
+}
+
+export async function approvePlayer(id: string) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new Error('Unauthorized')
+
+    const { error } = await supabase.from('players').update({ status: 'active', active: true }).eq('id', id)
+    if (error) throw new Error(error.message)
+
+    revalidatePath('/admin/roster')
+    revalidatePath('/roster')
+    return { success: true }
+}
+
+export async function rejectPlayer(id: string) {
+    // Rejecting is effectively deleting the pending record
+    return deletePlayer(id)
 }
