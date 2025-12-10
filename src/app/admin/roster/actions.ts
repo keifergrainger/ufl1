@@ -75,11 +75,11 @@ export async function approvePlayer(id: string) {
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
     if (serviceRoleKey) {
         const supabaseAdmin = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceRoleKey)
-        const { error } = await supabaseAdmin.from('players').update({ status: 'active', active: true }).eq('id', id)
+        const { error } = await supabaseAdmin.from('players').update({ status: 'approved', active: true }).eq('id', id)
         if (error) throw new Error(`Admin Update Error: ${error.message}`)
     } else {
         // Fallback to user RLS
-        const { error } = await supabase.from('players').update({ status: 'active', active: true }).eq('id', id)
+        const { error } = await supabase.from('players').update({ status: 'approved', active: true }).eq('id', id)
         if (error) throw new Error(error.message)
     }
 

@@ -11,6 +11,8 @@ export interface HomeContent {
         title: string;
         highlight: string;
         subtitle: string;
+        formattedDate?: string;
+        formattedTime?: string;
     };
     stats: {
         record: string;
@@ -18,6 +20,7 @@ export interface HomeContent {
         capacity: number;
     };
     nextGame: NextGameData;
+    nextGameDateTime?: string | null;
     news: NewsItem[];
 }
 
@@ -35,10 +38,15 @@ export default function HomePageContent({ content }: { content: HomeContent }) {
                 teamRecord={`${content.stats.record} All-Time Record`}
                 nextOpponentName={content.nextGame.opponent}
                 nextGameWeek={content.nextGame.week}
-                nextGameDateTime={null} // TODO: Add datetime to settings if needed
+                nextGameDateTime={content.nextGameDateTime}
                 nextGameBroadcast={content.nextGame.broadcaster}
+                formattedDate={content.hero.formattedDate}
+                formattedTime={content.hero.formattedTime}
             />
-            <NextGameCard game={content.nextGame} />
+            {/* Pull Up Wrapper */}
+            <div className="relative z-30 -mt-32 md:mt-0">
+                <NextGameCard game={content.nextGame} />
+            </div>
             <StatStrip
                 championshipCount={content.stats.championships}
                 winCount={winCount}

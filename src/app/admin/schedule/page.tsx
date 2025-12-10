@@ -8,6 +8,9 @@ export default async function AdminSchedulePage() {
         .select('*')
         .order('week', { ascending: true })
 
+    const { data: settings } = await supabase.from('site_settings').select('*')
+    const timezone = settings?.find(s => s.key === 'site_timezone')?.value || 'America/Chicago'
+
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -17,7 +20,7 @@ export default async function AdminSchedulePage() {
                 </div>
             </div>
 
-            <ScheduleList games={games || []} />
+            <ScheduleList games={games || []} timezone={timezone} />
         </div>
     )
 }

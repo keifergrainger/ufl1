@@ -9,13 +9,25 @@ export interface NextGameData {
     opponent: string;
     venue: string;
     broadcaster: string;
+    is_home: boolean;
+    ticket_url?: string;
+    stallions_record?: string;
 }
 
 export default function NextGameCard({ game }: { game: NextGameData }) {
     if (!game) return null;
 
+    const homeTeamName = game.is_home ? "Stallions" : game.opponent.split(' ').pop();
+    const homeTeamLocation = game.is_home ? "Birmingham" : game.opponent.split(' ').slice(0, -1).join(' ');
+    // If Stallions are home, use passed record. If Opponent is home, we don't have their record, use placeholder or hide.
+    const homeTeamRecord = game.is_home ? game.stallions_record : "0-0";
+
+    const awayTeamName = game.is_home ? game.opponent.split(' ').pop() : "Stallions";
+    const awayTeamLocation = game.is_home ? game.opponent.split(' ').slice(0, -1).join(' ') : "Birmingham";
+    const awayTeamRecord = game.is_home ? "0-0" : game.stallions_record;
+
     return (
-        <div className="container max-w-5xl w-full mx-auto -mt-24 relative z-30 px-4">
+        <div className="container max-w-5xl w-full mx-auto mt-8 md:-mt-24 relative z-30 px-4">
             <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none rounded-3xl -z-10" />
                 <div className="relative group">
@@ -43,7 +55,7 @@ export default function NextGameCard({ game }: { game: NextGameData }) {
                                 <span className="text-xs font-bold uppercase tracking-widest text-white/70">Next Matchup</span>
                             </div>
                             <div className="text-xs font-black uppercase text-secondary tracking-[0.2em] flex items-center gap-2">
-                                WEEK {game.week} <span className="text-white/20">|</span> UFL 2024
+                                WEEK {game.week} <span className="text-white/20">|</span> UFL 2026
                             </div>
                         </div>
 
@@ -57,12 +69,16 @@ export default function NextGameCard({ game }: { game: NextGameData }) {
                                     </Badge>
                                     <div className="mt-2 text-center flex flex-col items-center">
                                         <div className="text-4xl md:text-6xl font-black uppercase text-white tracking-wide leading-none mb-0 drop-shadow-2xl">
-                                            Stallions
+                                            {homeTeamName}
                                         </div>
                                         <div className="flex items-center gap-3 mt-2">
-                                            <span className="text-lg font-bold text-muted-foreground uppercase tracking-wider">Birmingham</span>
-                                            <div className="h-4 w-px bg-white/10" />
-                                            <span className="text-2xl font-black text-white">3-0</span>
+                                            <span className="text-lg font-bold text-muted-foreground uppercase tracking-wider">{homeTeamLocation}</span>
+                                            {homeTeamRecord && (
+                                                <>
+                                                    <div className="h-4 w-px bg-white/10" />
+                                                    <span className="text-2xl font-black text-white">{homeTeamRecord}</span>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -93,12 +109,16 @@ export default function NextGameCard({ game }: { game: NextGameData }) {
                                     </Badge>
                                     <div className="mt-2 text-center flex flex-col items-center">
                                         <div className="text-4xl md:text-6xl font-black uppercase text-white tracking-wide leading-none mb-0 drop-shadow-2xl">
-                                            {game.opponent.split(' ').pop()}
+                                            {awayTeamName}
                                         </div>
                                         <div className="flex items-center gap-3 mt-2">
-                                            <span className="text-lg font-bold text-muted-foreground uppercase tracking-wider">{game.opponent.split(' ').slice(0, -1).join(' ')}</span>
-                                            <div className="h-4 w-px bg-white/10" />
-                                            <span className="text-2xl font-black text-white">2-1</span>
+                                            <span className="text-lg font-bold text-muted-foreground uppercase tracking-wider">{awayTeamLocation}</span>
+                                            {awayTeamRecord && (
+                                                <>
+                                                    <div className="h-4 w-px bg-white/10" />
+                                                    <span className="text-2xl font-black text-white">{awayTeamRecord}</span>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -113,7 +133,7 @@ export default function NextGameCard({ game }: { game: NextGameData }) {
                                     <div className="flex items-center gap-2">
                                         <span className="text-white">{game.venue}</span>
                                         <span className="text-white/10">|</span>
-                                        <span className="text-secondary/80 font-bold">Home Game</span>
+                                        <span className="text-secondary/80 font-bold">{game.is_home ? "Home Game" : "Away Game"}</span>
                                     </div>
                                 </div>
 
@@ -125,9 +145,17 @@ export default function NextGameCard({ game }: { game: NextGameData }) {
 
                                 {/* Right: Buy Tickets Button */}
                                 <div className="flex justify-center md:justify-end w-full md:w-auto">
-                                    <Button className="w-full md:w-auto bg-secondary text-secondary-foreground hover:bg-secondary/90 hover:scale-105 hover:shadow-[0_0_20px_rgba(197,183,131,0.2)] transition-all duration-300 font-black uppercase px-6 text-xs tracking-wider border border-[#C5B783]/50 h-9">
-                                        Buy Tickets
-                                    </Button>
+                                    {game.ticket_url ? (
+                                        <Link href={game.ticket_url} target="_blank">
+                                            <Button className="w-full md:w-auto bg-secondary text-secondary-foreground hover:bg-secondary/90 hover:scale-105 hover:shadow-[0_0_20px_rgba(197,183,131,0.2)] transition-all duration-300 font-black uppercase px-6 text-xs tracking-wider border border-[#C5B783]/50 h-9">
+                                                Buy Tickets
+                                            </Button>
+                                        </Link>
+                                    ) : (
+                                        <Button disabled className="w-full md:w-auto bg-neutral-800 text-neutral-500 font-black uppercase px-6 text-xs tracking-wider border border-white/5 h-9">
+                                            Tickets Not Available
+                                        </Button>
+                                    )}
                                 </div>
                             </div>
                         </CardContent>

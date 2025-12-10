@@ -117,8 +117,26 @@ export default function RosterList({ players }: { players: any[] }) {
                         {filteredPlayers.map(player => (
                             <tr key={player.id} className="hover:bg-white/5 transition-colors">
                                 <td className="px-6 py-4">
-                                    <div className="font-bold text-white text-lg">{player.name}</div>
-                                    <div className="text-xs text-neutral-500 uppercase tracking-wide">{player.college}</div>
+                                    <div className="flex items-center gap-4">
+                                        <div className="relative w-12 h-12 rounded-full overflow-hidden bg-white/5 border border-white/10 shrink-0">
+                                            {player.image_url ? (
+                                                // eslint-disable-next-line @next/next/no-img-element
+                                                <img
+                                                    src={player.image_url}
+                                                    alt={player.name}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center bg-white/5">
+                                                    <User className="w-6 h-6 text-white/20" />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <div className="font-bold text-white text-lg leading-tight">{player.name}</div>
+                                            <div className="text-xs text-neutral-500 uppercase tracking-wide">{player.college}</div>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-2">

@@ -110,3 +110,13 @@
   background-size: 200% 200%;
   animation: gold-shine 8s linear infinite;
 }
+
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}

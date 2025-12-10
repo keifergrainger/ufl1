@@ -39,6 +39,22 @@ export default function SettingsList({ settings }: { settings: Setting[] }) {
         }
     }
 
+    // Ensure site_timezone exists in the list for editing
+    let displaySettings = [...settings]
+
+    // Remove legacy next_game settings that are now handled dynamically
+    displaySettings = displaySettings.filter(s => !s.key.startsWith('next_game_'))
+
+    if (!displaySettings.find(s => s.key === 'site_timezone')) {
+        displaySettings.push({
+            id: 'temp-timezone',
+            key: 'site_timezone',
+            value: 'America/Chicago', // Default default
+            description: 'Main timezone for the website (e.g. America/Chicago)',
+            type: 'string'
+        })
+    }
+
     return (
         <table className="w-full text-left">
             <thead className="bg-white/5 text-xs uppercase font-bold text-neutral-500">
@@ -49,7 +65,7 @@ export default function SettingsList({ settings }: { settings: Setting[] }) {
                 </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-                {settings.map((setting) => (
+                {displaySettings.map((setting) => (
                     <tr key={setting.id} className="hover:bg-white/5 transition-colors">
                         <td className="px-6 py-4">
                             <div className="font-mono text-sm text-red-400 mb-1">{setting.key}</div>
@@ -57,12 +73,27 @@ export default function SettingsList({ settings }: { settings: Setting[] }) {
                         </td>
                         <td className="px-6 py-4">
                             {editingId === setting.id ? (
-                                <input
-                                    className="bg-black border border-white/20 rounded px-3 py-2 w-full text-white focus:border-red-500 outline-none"
-                                    value={editValue}
-                                    onChange={(e) => setEditValue(e.target.value)}
-                                    autoFocus
-                                />
+                                setting.key === 'site_timezone' ? (
+                                    <select
+                                        className="bg-black border border-white/20 rounded px-3 py-2 w-full text-white focus:border-red-500 outline-none appearance-none"
+                                        value={editValue}
+                                        onChange={(e) => setEditValue(e.target.value)}
+                                        autoFocus
+                                    >
+                                        <option value="America/New_York">Eastern Time (ET)</option>
+                                        <option value="America/Chicago">Central Time (CT)</option>
+                                        <option value="America/Denver">Mountain Time (MT)</option>
+                                        <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                                        <option value="UTC">UTC</option>
+                                    </select>
+                                ) : (
+                                    <input
+                                        className="bg-black border border-white/20 rounded px-3 py-2 w-full text-white focus:border-red-500 outline-none"
+                                        value={editValue}
+                                        onChange={(e) => setEditValue(e.target.value)}
+                                        autoFocus
+                                    />
+                                )
                             ) : (
                                 <div className="text-white font-medium max-w-md truncate" title={setting.value}>
                                     {setting.value}
