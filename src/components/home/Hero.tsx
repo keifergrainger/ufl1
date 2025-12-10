@@ -79,7 +79,7 @@ export default function Hero({
             {/* BACKGROUND STADIUM */}
             <div className="absolute inset-0 z-0">
                 <Image
-                    src="https://cdn.discordapp.com/attachments/723741657048285275/1446746206549315655/88e24751-2024-06-03_Birmingham-Stallions-feature_16x9.png?ex=69351ae6&is=6933c966&hm=c91c6f420080474ab12be08e4a1e22f7a36c207d41bf93fc35fc83ef340675a3&"
+                    src="https://cdn.discordapp.com/attachments/723741657048285275/1446746206549315655/88e24751-2024-06-03_Birmingham-Stallions-feature_16x9.png?ex=693b09a6&is=6939b826&hm=48eb0d692408c3e889a38c648be6adba4900c450eeda772c6eb130951d42d821&"
                     alt="Football stadium at night"
                     fill
                     className="object-cover opacity-100 blur-[1px]"
