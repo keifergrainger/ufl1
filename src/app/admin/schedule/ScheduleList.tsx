@@ -43,7 +43,7 @@ export default function ScheduleList({ games }: { games: any[] }) {
             time_display: 'TBD',
             venue: 'Protective Stadium',
             is_home: true,
-            is_home: true // oops duplicate
+
         } as any)
         setIsDialogOpen(true)
     }

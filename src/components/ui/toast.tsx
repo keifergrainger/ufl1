@@ -128,15 +128,16 @@ const ToastInner = React.forwardRef<
     VariantProps<typeof toastVariants> & {
         open?: boolean;
         onOpenChange?: (open: boolean) => void;
+        duration?: number;
     }
->(({ className, variant, open, onOpenChange, children, ...props }, ref) => {
+>(({ className, variant, open, onOpenChange, children, duration = 5000, ...props }, ref) => {
 
     React.useEffect(() => {
         const timer = setTimeout(() => {
             if (onOpenChange) onOpenChange(false);
-        }, 5000);
+        }, duration);
         return () => clearTimeout(timer);
-    }, [onOpenChange]);
+    }, [onOpenChange, duration]);
 
     const handleClose = () => {
         if (onOpenChange) onOpenChange(false);

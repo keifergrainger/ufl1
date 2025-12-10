@@ -36,10 +36,10 @@ export default async function Home() {
       capacity: capacityCount,
     },
     nextGame: {
-      week: nextGameRaw.week,
+      week: nextGameRaw.week.toString(),
       opponent: nextGameRaw.opponent,
       venue: nextGameRaw.venue,
-      broadcaster: nextGameRaw.broadcaster,
+      broadcaster: nextGameRaw.broadcaster || "",
     },
     news: newsItems || [],
   };
