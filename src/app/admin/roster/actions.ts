@@ -64,13 +64,24 @@ export async function deletePlayer(id: string) {
     return { success: true }
 }
 
+import { createClient as createAdminClient } from '@supabase/supabase-js'
+
 export async function approvePlayer(id: string) {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) throw new Error('Unauthorized')
 
-    const { error } = await supabase.from('players').update({ status: 'active', active: true }).eq('id', id)
-    if (error) throw new Error(error.message)
+    // Use Service Role Key if available to bypass RLS
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    if (serviceRoleKey) {
+        const supabaseAdmin = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceRoleKey)
+        const { error } = await supabaseAdmin.from('players').update({ status: 'active', active: true }).eq('id', id)
+        if (error) throw new Error(`Admin Update Error: ${error.message}`)
+    } else {
+        // Fallback to user RLS
+        const { error } = await supabase.from('players').update({ status: 'active', active: true }).eq('id', id)
+        if (error) throw new Error(error.message)
+    }
 
     revalidatePath('/admin/roster')
     revalidatePath('/roster')
@@ -78,6 +89,23 @@ export async function approvePlayer(id: string) {
 }
 
 export async function rejectPlayer(id: string) {
-    // Rejecting is effectively deleting the pending record
-    return deletePlayer(id)
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new Error('Unauthorized')
+
+    // Use Service Role Key if available to bypass RLS
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    if (serviceRoleKey) {
+        const supabaseAdmin = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceRoleKey)
+        const { error } = await supabaseAdmin.from('players').delete().eq('id', id)
+        if (error) throw new Error(`Admin Delete Error: ${error.message}`)
+    } else {
+        // Fallback
+        const { error } = await supabase.from('players').delete().eq('id', id)
+        if (error) throw new Error(error.message)
+    }
+
+    revalidatePath('/admin/roster')
+    revalidatePath('/roster')
+    return { success: true }
 }

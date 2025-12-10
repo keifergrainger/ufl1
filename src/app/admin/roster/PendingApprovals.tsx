@@ -21,8 +21,9 @@ export default function PendingApprovals({ players }: { players: any[] }) {
         setOperating(id)
         try {
             await approvePlayer(id)
-        } catch (e) {
-            alert('Error approving')
+        } catch (e: any) {
+            console.error(e)
+            alert(`Error approving: ${e.message}`)
         } finally {
             setOperating(null)
         }
