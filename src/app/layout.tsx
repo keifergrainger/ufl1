@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
+import DisclaimerModal from "@/components/disclaimer/DisclaimerModal";
 
 export default function RootLayout({
   children,
@@ -26,6 +27,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <DisclaimerModal />
         <Toaster />
       </body>
     </html>
