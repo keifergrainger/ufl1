@@ -32,7 +32,7 @@ export default function Navbar() {
                 </div>
 
                 {/* Center: Desktop Navigation */}
-                <nav className="hidden lg:flex items-center gap-8">
+                <nav className="hidden xl:flex items-center gap-8">
                     {NAV_LINKS.map((link) => (
                         <Link
                             key={link.href}
@@ -60,7 +60,7 @@ export default function Navbar() {
                     {/* Mobile Menu Trigger */}
                     <Sheet open={isOpen} onOpenChange={setIsOpen}>
                         <SheetTrigger asChild>
-                            <Button variant="ghost" size="icon" className="lg:hidden text-muted-foreground hover:text-foreground">
+                            <Button variant="ghost" size="icon" className="xl:hidden text-muted-foreground hover:text-foreground">
                                 <Menu className="w-6 h-6" />
                                 <span className="sr-only">Toggle menu</span>
                             </Button>

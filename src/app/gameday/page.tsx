@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function GameDayPage() {
     return (
-        <div className="container min-h-screen py-12 md:py-20">
+        <div className="container mx-auto px-4 lg:px-6 max-w-6xl min-h-screen py-12 md:py-20">
 
             {/* Header */}
             <div className="text-center mb-16">

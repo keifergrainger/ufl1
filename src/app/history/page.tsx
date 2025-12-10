@@ -1,12 +1,21 @@
 import Timeline from "@/components/history/Timeline";
 import { Metadata } from "next";
+import { createClient } from "@/lib/supabase-server";
 
 export const metadata: Metadata = {
     title: "History | Birmingham Stallions",
     description: "The championship legacy of the Birmingham Stallions.",
 };
 
-export default function HistoryPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function HistoryPage() {
+    const supabase = await createClient();
+    const { data: events } = await supabase
+        .from('history_events')
+        .select('*')
+        .order('display_order', { ascending: true });
+
     return (
         <div className="relative min-h-screen bg-[#050505] overflow-hidden">
 
@@ -39,7 +48,7 @@ export default function HistoryPage() {
             />
 
             {/* Content Container */}
-            <div className="container relative z-10 py-20">
+            <div className="container mx-auto px-4 lg:px-6 max-w-6xl relative z-10 py-20">
                 <div className="text-center mb-20 relative">
                     {/* Header Glow */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[100px] bg-white/5 blur-[50px] pointer-events-none" />
@@ -51,7 +60,7 @@ export default function HistoryPage() {
                     </p>
                 </div>
 
-                <Timeline />
+                <Timeline events={events || []} />
             </div>
         </div>
     );

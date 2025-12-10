@@ -38,13 +38,36 @@ const useCountdown = (targetDate: Date) => {
     return timeLeft;
 };
 
-export default function Hero() {
-    // 3 days from now at 7PM demo kickoff time
-    const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + 3);
-    targetDate.setHours(19, 0, 0, 0);
+export default function Hero({
+    heroTitleHighlight = "We Are",
+    heroTitle = "Birmingham",
+    heroSubtitle = "Defending the Dynasty",
+    teamRecord = "32-4 All-Time Record",
+    nextOpponentName = "DC Defenders",
+    nextGameWeek = "4",
+    nextGameDateTime = null, // ISO String
+    nextGameBroadcast = "FOX"
+}: {
+    heroTitleHighlight?: string;
+    heroTitle?: string;
+    heroSubtitle?: string;
+    teamRecord?: string;
+    nextOpponentName?: string;
+    nextGameWeek?: string;
+    nextGameDateTime?: string | null;
+    nextGameBroadcast?: string;
+}) {
+    // Default to 3 days from now if no date provided
+    // Or parse the provided string
+    const targetDate = nextGameDateTime ? new Date(nextGameDateTime) : new Date();
+    if (!nextGameDateTime) {
+        targetDate.setDate(targetDate.getDate() + 3);
+        targetDate.setHours(19, 0, 0, 0);
+    }
 
     const { days, hours, minutes, seconds } = useCountdown(targetDate);
+    const dateDisplay = targetDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const timeDisplay = targetDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 
     const dd = String(days).padStart(2, "0");
     const hh = String(hours).padStart(2, "0");
@@ -83,10 +106,6 @@ export default function Hero() {
             {/* 2. Light Sweep Animation (CSS) */}
             <div className="absolute top-0 left-0 w-full h-[300px] bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-[30deg] translate-x-[-100%] animate-light-sweep pointer-events-none z-10" />
 
-
-
-
-
             {/* MAIN CONTENT */}
             <div className="container relative z-20 flex flex-col items-center text-center pt-20 pb-32">
 
@@ -99,37 +118,40 @@ export default function Hero() {
                 <div className="flex flex-col md:flex-row items-center gap-4 mb-8 transform -skew-x-12">
                     <div className="bg-black/80 backdrop-blur-md border border-secondary/50 px-8 py-3 flex items-center gap-4 shadow-[10px_10px_0px_0px_rgba(197,183,131,0.2)]">
                         <span className="text-secondary font-black uppercase tracking-wider text-sm flex items-center gap-2">
-                            Game Week 4
+                            Game Week {nextGameWeek}
                         </span>
                         <div className="w-0.5 h-4 bg-secondary/50 rotate-12" />
-                        <span className="text-white font-bold text-base uppercase tracking-tight">vs DC Defenders</span>
+                        <span className="text-white font-bold text-base uppercase tracking-tight">vs {nextOpponentName}</span>
                         <div className="hidden md:block w-0.5 h-4 bg-secondary/50 rotate-12" />
-                        <span className="text-white/80 text-xs font-bold uppercase tracking-widest bg-white/10 px-2 py-0.5 -skew-x-6">Apr 20 • 7:00 PM</span>
+                        <span className="text-white/80 text-xs font-bold uppercase tracking-widest bg-white/10 px-2 py-0.5 -skew-x-6">{dateDisplay} • {timeDisplay}</span>
                     </div>
                 </div>
 
                 {/* Main Headline */}
-                <h1 className="relative text-7xl md:text-9xl lg:text-[11rem] font-black uppercase tracking-tighter text-white mb-4 leading-[0.85] italic">
-                    <span className="inline-block relative z-10">
-                        <span className="drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)]">We Are</span>
-                        {/* Animated Gold Wipe - Anchored to Text */}
-                        <div className="absolute bottom-2 left-[54%] -translate-x-1/2 w-[105%] h-[40%] bg-gradient-to-r from-secondary/20 via-secondary/80 to-secondary/20 animate-gold-shine rounded-sm -z-10 mix-blend-screen" />
+                <h1 className="relative text-6xl md:text-8xl lg:text-9xl xl:text-[11rem] font-black uppercase tracking-tighter text-white mb-4 leading-[0.85] italic flex flex-col items-center">
+
+                    {/* Highlighted Line (Gold Bar) */}
+                    <span className="relative inline-block z-10 pl-2 pr-8 md:pl-4 md:pr-14">
+                        <span className="drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)] relative z-20">{heroTitleHighlight}</span>
+                        {/* Animated Gold Wipe - Anchored to Text via Padding */}
+                        <div className="absolute top-1/2 left-0 -translate-y-[45%] w-full h-[85%] bg-gradient-to-r from-secondary/40 via-secondary/90 to-secondary/40 animate-gold-shine rounded-md z-0 mix-blend-screen shadow-[0_0_20px_rgba(197,183,131,0.3)]" />
                     </span>
-                    <br className="md:hidden" />
-                    <span className="relative inline-block text-transparent bg-clip-text bg-white z-10 text-outline-black drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)] pr-8">
-                        Birmingham
+
+                    {/* Main Title Line */}
+                    <span className="relative inline-block z-10 drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)]">
+                        {heroTitle}
                     </span>
                 </h1>
 
                 {/* Subheadline & Record */}
                 <div className="flex flex-col items-center gap-4 mb-12 transform -skew-x-6">
                     <p className="text-2xl md:text-3xl text-white font-black italic tracking-tight uppercase drop-shadow-md bg-black/40 px-4 py-1">
-                        Defending the Dynasty
+                        {heroSubtitle}
                     </p>
                     <div className="flex items-center gap-4">
                         <div className="h-1 w-12 bg-secondary skew-x-12" />
                         <p className="text-lg font-bold uppercase tracking-widest text-secondary drop-shadow-sm">
-                            32–4 All-Time Record
+                            {teamRecord}
                         </p>
                         <div className="h-1 w-12 bg-secondary skew-x-12" />
                     </div>

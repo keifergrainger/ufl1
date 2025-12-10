@@ -1,21 +1,28 @@
 "use client";
 
-import { history } from "@/data/history";
 import { motion } from "framer-motion";
 
-export default function Timeline() {
+interface HistoryEvent {
+    id: string;
+    year: string;
+    title: string;
+    description: string;
+    display_order: number;
+}
+
+export default function Timeline({ events }: { events: HistoryEvent[] }) {
     return (
         <div className="relative py-10 md:py-20">
             {/* Vertical Spine (Gold Thread) */}
             <div className="absolute left-[20px] md:left-1/2 top-0 bottom-0 w-px md:-translate-x-1/2 z-0 bg-gradient-to-b from-transparent via-[#C5B783]/50 to-transparent shadow-[0_0_15px_rgba(197,183,131,0.3)]" />
 
             <div className="flex flex-col gap-24 md:gap-32 relative z-10 max-w-7xl mx-auto">
-                {history.map((event, index) => {
+                {events.map((event, index) => {
                     const isEven = index % 2 === 0;
 
                     return (
                         <motion.div
-                            key={event.year}
+                            key={event.id}
                             initial={{ opacity: 0, y: 50 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-100px" }}

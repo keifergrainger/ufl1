@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 // Define the Player interface matching Supabase
 interface Player {
@@ -18,42 +19,68 @@ interface Player {
     weight: string;
     college: string;
     image_url?: string;
+    category?: string; // Derived field
 }
 
-const UNITS = ["ALL", "Offense", "Defense", "Special Teams"];
+const UNITS = ["ALL", "OFFENSE", "DEFENSE", "SPECIAL TEAMS"];
 
-export default function RosterGrid() {
-    const [players, setPlayers] = useState<Player[]>([]);
-    const [loading, setLoading] = useState(true);
+const POSITION_GROUPS: Record<string, string[]> = {
+    offense: ["QB", "RB", "FB", "WR", "TE", "OL", "LT", "LG", "C", "RG", "RT"],
+    defense: ["CB", "DB", "SAF", "S", "FS", "SS", "LB", "OLB", "ILB", "MLB", "DE", "DT", "DL", "EDGE"],
+    special: ["K", "P", "LS", "KR", "PR"]
+};
+
+function categorizePlayer(position: string): string {
+    const pos = position.toUpperCase().trim();
+    if (POSITION_GROUPS.offense.includes(pos)) return "offense";
+    if (POSITION_GROUPS.defense.includes(pos)) return "defense";
+    if (POSITION_GROUPS.special.includes(pos)) return "special";
+    return "unknown";
+}
+
+const container = {
+    hidden: { opacity: 0 },
+    show: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.05
+        }
+    }
+};
+
+const item = {
+    hidden: { opacity: 0, y: -20 },
+    show: { opacity: 1, y: 0 }
+};
+
+export default function RosterGrid({ initialPlayers }: { initialPlayers: any[] }) {
+    const [players, setPlayers] = useState<Player[]>(
+        initialPlayers.map((p: any) => ({
+            ...p,
+            category: categorizePlayer(p.position || "")
+        }))
+    );
+    // const [loading, setLoading] = useState(true); // Removed loading
     const [activeUnit, setActiveUnit] = useState("ALL");
     const [searchQuery, setSearchQuery] = useState("");
+    const [hasIntroPlayed, setHasIntroPlayed] = useState(false);
 
-    useEffect(() => {
-        async function fetchRoster() {
-            try {
-                const res = await fetch('/api/players?status=approved');
-                const data = await res.json();
-                setPlayers(data);
-            } catch (error) {
-                console.error("Failed to load roster", error);
-            } finally {
-                setLoading(false);
-            }
-        }
-        fetchRoster();
-    }, []);
+    // Removed useEffect fetch
+
 
     const filteredRoster = players.filter((player) => {
-        // Simple unit inference if missing (optional enhancement: add unit editing in admin)
-        const playerUnit = player.unit || "Offense";
+        let matchesUnit = true;
 
-        const matchesUnit = activeUnit === "ALL" || playerUnit === activeUnit;
+        if (activeUnit === "OFFENSE") matchesUnit = player.category === "offense";
+        else if (activeUnit === "DEFENSE") matchesUnit = player.category === "defense";
+        else if (activeUnit === "SPECIAL TEAMS") matchesUnit = player.category === "special";
+
         const matchesSearch = player.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             (player.position || "").toLowerCase().includes(searchQuery.toLowerCase());
         return matchesUnit && matchesSearch;
     });
 
-    if (loading) return <div className="text-white text-center p-10">Loading Roster...</div>;
+    // Loading check removed
 
     return (
         <div className="space-y-8">
@@ -92,10 +119,20 @@ export default function RosterGrid() {
             </div>
 
             {/* Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <motion.div
+                className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3"
+                variants={container}
+                initial="hidden"
+                animate="show"
+                viewport={{ once: true }}
+                onAnimationComplete={() => setHasIntroPlayed(true)}
+            >
                 {filteredRoster.map((player) => (
-                    <div
+                    <motion.div
                         key={player.id}
+                        variants={item}
+                        initial={hasIntroPlayed ? "show" : "hidden"} // If intro played, start visible
+                        animate="show"
                         className="group relative bg-card rounded-lg overflow-hidden border border-white/5 hover:border-secondary/50 transition-all hover:translate-y-[-4px]"
                     >
                         {/* Image Area */}
@@ -105,7 +142,9 @@ export default function RosterGrid() {
                             {player.image_url ? (
                                 <img src={player.image_url} alt={player.name} className="w-full h-full object-cover z-0" />
                             ) : (
-                                <User className="w-48 h-48 text-white/5 absolute bottom-0 mb-[-20px] z-0 scale-150" />
+                                <div className="h-full flex items-end justify-center">
+                                    <User className="w-48 h-48 text-white/5 absolute bottom-0 mb-[-20px] z-0 scale-150" />
+                                </div>
                             )}
 
                             {/* Number Overlay */}
@@ -138,13 +177,13 @@ export default function RosterGrid() {
                                 Full Bio
                             </a>
                         </div>
-                    </div>
+                    </motion.div>
                 ))}
 
                 {filteredRoster.length === 0 && (
                     <div className="col-span-full text-center py-20 text-muted-foreground">No approved players found. Import and approve them in the Admin Dashboard!</div>
                 )}
-            </div>
+            </motion.div>
         </div>
     );
 }

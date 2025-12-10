@@ -1,15 +1,21 @@
-import { schedule } from "@/data/schedule";
 import { MapPin, SignalHigh } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
-export default function NextGameCard() {
-    // Logic to find the next game (simplified for MVP)
-    const nextGame = schedule.find((g) => g.result === null) || schedule[schedule.length - 1];
+export interface NextGameData {
+    week: string;
+    opponent: string;
+    venue: string;
+    broadcaster: string;
+}
+
+export default function NextGameCard({ game }: { game: NextGameData }) {
+    if (!game) return null;
 
     return (
-        <div className="container max-w-5xl mx-auto -mt-24 relative z-30 px-4">
+        <div className="container max-w-5xl w-full mx-auto -mt-24 relative z-30 px-4">
             <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none rounded-3xl -z-10" />
                 <div className="relative group">
@@ -37,19 +43,13 @@ export default function NextGameCard() {
                                 <span className="text-xs font-bold uppercase tracking-widest text-white/70">Next Matchup</span>
                             </div>
                             <div className="text-xs font-black uppercase text-secondary tracking-[0.2em] flex items-center gap-2">
-                                WEEK {nextGame.week} <span className="text-white/20">|</span> UFL 2024
+                                WEEK {game.week} <span className="text-white/20">|</span> UFL 2024
                             </div>
                         </div>
 
                         <CardContent className="p-0 relative z-20">
                             {/* Main Content Grid */}
                             <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] relative">
-                                {/* Vertical Separator (Center of Team Section) */}
-                                {/* We use border on the vs container instead to be cleaner, or absolute lines if strictly requested. 
-                                Let's use the explicit request: absolute lines. 
-                                But since it's a grid, sticking it in the middle col is easiest.
-                            */}
-
                                 {/* HOME TEAM */}
                                 <div className="relative p-8 flex flex-col items-center justify-center border-b lg:border-b-0 border-white/5">
                                     <Badge className="absolute top-4 left-1/2 -translate-x-1/2 bg-white/5 text-white/50 hover:bg-white/10 text-[10px] font-bold uppercase tracking-widest border-0 px-3 py-1">
@@ -93,10 +93,10 @@ export default function NextGameCard() {
                                     </Badge>
                                     <div className="mt-2 text-center flex flex-col items-center">
                                         <div className="text-4xl md:text-6xl font-black uppercase text-white tracking-wide leading-none mb-0 drop-shadow-2xl">
-                                            {nextGame.opponent.split(' ').pop()}
+                                            {game.opponent.split(' ').pop()}
                                         </div>
                                         <div className="flex items-center gap-3 mt-2">
-                                            <span className="text-lg font-bold text-muted-foreground uppercase tracking-wider">{nextGame.opponent.split(' ').slice(0, -1).join(' ')}</span>
+                                            <span className="text-lg font-bold text-muted-foreground uppercase tracking-wider">{game.opponent.split(' ').slice(0, -1).join(' ')}</span>
                                             <div className="h-4 w-px bg-white/10" />
                                             <span className="text-2xl font-black text-white">2-1</span>
                                         </div>
@@ -111,7 +111,7 @@ export default function NextGameCard() {
                                 <div className="flex items-center justify-center md:justify-start gap-4 px-4 py-1.5 rounded-full border border-white/5 bg-black/20 text-xs md:text-sm font-medium uppercase text-muted-foreground tracking-wider">
                                     <MapPin className="w-4 h-4 text-primary" />
                                     <div className="flex items-center gap-2">
-                                        <span className="text-white">{nextGame.venue}</span>
+                                        <span className="text-white">{game.venue}</span>
                                         <span className="text-white/10">|</span>
                                         <span className="text-secondary/80 font-bold">Home Game</span>
                                     </div>
@@ -120,7 +120,7 @@ export default function NextGameCard() {
                                 {/* Center: Broadcast Pill */}
                                 <div className="px-6 py-1.5 rounded-full border border-white/10 bg-black/60 text-xs font-bold uppercase tracking-wider text-white shadow-inner flex items-center gap-2">
                                     <SignalHigh className="w-3 h-3 text-secondary" />
-                                    <span>Broadcast: {nextGame.broadcaster || "FOX"}</span>
+                                    <span>Broadcast: {game.broadcaster || "FOX"}</span>
                                 </div>
 
                                 {/* Right: Buy Tickets Button */}
