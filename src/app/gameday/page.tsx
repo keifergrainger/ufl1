@@ -28,10 +28,23 @@ export default function GameDayPage() {
                 {/* Left: Stadium Visual/Info */}
                 <Card className="bg-card border-white/10 overflow-hidden group">
                     <div className="h-64 bg-neutral-800 relative flex items-center justify-center overflow-hidden">
-                        {/* Placeholder for Stadium Image */}
-                        <div className="absolute inset-0 bg-secondary/5 group-hover:bg-secondary/10 transition-colors" />
-                        <MapPin className="w-16 h-16 text-muted-foreground/30" />
-                        <span className="absolute bottom-4 left-4 font-bold text-white uppercase tracking-widest bg-black/50 px-2 py-1 rounded backdrop-blur-md">Protective Stadium</span>
+                        {/* Static Map via Embed + no pointer events */}
+                        <iframe
+                            width="100%"
+                            height="100%"
+                            frameBorder="0"
+                            scrolling="no"
+                            marginHeight={0}
+                            marginWidth={0}
+                            title="Protective Stadium Map"
+                            src="https://maps.google.com/maps?q=Protective%20Stadium%2C%20Birmingham%2C%20AL&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                            className="absolute inset-0 w-full h-full opacity-80 hover:opacity-100 transition-opacity pointer-events-none"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />
+                        <span className="absolute bottom-4 left-4 font-bold text-white uppercase tracking-widest bg-black/50 px-2 py-1 rounded backdrop-blur-md border border-white/10 shadow-xl z-10">
+                            <MapPin className="inline-block w-4 h-4 mr-1 -mt-1 text-secondary" />
+                            Protective Stadium
+                        </span>
                     </div>
                     <CardHeader>
                         <CardTitle className="text-2xl font-black uppercase text-white">Getting There</CardTitle>

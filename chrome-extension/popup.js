@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             statusDiv.innerText = 'Uploading...';
 
             try {
-                const res = await fetch('http://localhost:3000/api/import-player', {
+                const res = await fetch('https://bhamstallions.com/api/import-player', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     statusDiv.innerText = 'Error: ' + data.error;
                 }
             } catch (e) {
-                statusDiv.innerText = 'Network Error. Is localhost:3000 running?';
+                statusDiv.innerText = 'Network Error. Check connection to bhamstallions.com.';
             }
         });
     });
