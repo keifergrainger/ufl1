@@ -36,10 +36,12 @@ function Counter({ from, to, duration = 1.5 }: { from: number; to: number; durat
 export default function StatStrip({
     championshipCount = 3,
     winCount = 32,
+    lossCount = 4,
     capacityCount = 47
 }: {
     championshipCount?: number;
     winCount?: number;
+    lossCount?: number;
     capacityCount?: number;
 }) {
     return (
@@ -68,10 +70,10 @@ export default function StatStrip({
                         <Star className="w-10 h-10 text-secondary mb-5 opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 drop-shadow-[0_0_8px_rgba(197,183,131,0.3)]" />
                         <div className="text-4xl md:text-5xl font-black text-white mb-2 flex items-baseline drop-shadow-lg">
                             <Counter from={0} to={winCount} duration={1.2} />
-                            <span className="text-2xl text-white/50 ml-1">-4</span>
+                            <span className="text-2xl text-white/50 ml-1">-{lossCount}</span>
                         </div>
                         <div className="text-sm font-bold uppercase tracking-widest text-[#C5B783] mb-1">All-Time Wins</div>
-                        <div className="text-[10px] uppercase text-white/40 font-bold tracking-wider">{winCount}-4 Record</div>
+                        <div className="text-[10px] uppercase text-white/40 font-bold tracking-wider">{winCount}-{lossCount} Record</div>
                     </div>
 
                     {/* Right: Protective Stadium */}

@@ -22,8 +22,9 @@ export interface HomeContent {
 }
 
 export default function HomePageContent({ content }: { content: HomeContent }) {
-    // Parse record for stats wins
+    // Parse record for stats wins/losses
     const winCount = parseInt(content.stats.record.split("-")[0]) || 32;
+    const lossCount = parseInt(content.stats.record.split("-")[1]) || 4;
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -41,6 +42,7 @@ export default function HomePageContent({ content }: { content: HomeContent }) {
             <StatStrip
                 championshipCount={content.stats.championships}
                 winCount={winCount}
+                lossCount={lossCount}
                 capacityCount={content.stats.capacity}
             />
             <NewsGrid newsItems={content.news} />
