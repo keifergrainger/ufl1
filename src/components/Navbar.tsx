@@ -80,10 +80,17 @@ export default function Navbar() {
                     <Button
                         className="hidden sm:flex bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold uppercase tracking-wider px-6"
                         size="lg"
-                        onClick={handleTicketClick}
+                        asChild
                     >
-                        <Ticket className="w-4 h-4 mr-2" />
-                        Buy Tickets
+                        <Link
+                            href="https://www.theufl.com/birmingham-tickets"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={handleTicketClick}
+                        >
+                            <Ticket className="w-4 h-4 mr-2" />
+                            Buy Tickets
+                        </Link>
                     </Button>
 
                     {/* Mobile Menu Trigger */}
@@ -130,9 +137,16 @@ export default function Navbar() {
                                     <Button
                                         className="w-full bg-secondary text-secondary-foreground font-bold uppercase"
                                         size="lg"
-                                        onClick={handleTicketClick}
+                                        asChild
                                     >
-                                        Buy Tickets
+                                        <Link
+                                            href="https://www.theufl.com/birmingham-tickets"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={handleTicketClick}
+                                        >
+                                            Buy Tickets
+                                        </Link>
                                     </Button>
                                 </div>
                             </div>

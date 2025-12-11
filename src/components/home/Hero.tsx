@@ -200,10 +200,13 @@ export default function Hero({
                     <Button
                         size="lg"
                         className="w-full h-14 px-8 text-base font-black bg-secondary text-black hover:bg-white hover:text-black uppercase tracking-tight shadow-[4px_4px_0px_0px_rgba(0,0,0,0.4)] transform -skew-x-12 rounded-none transition-all duration-300"
+                        asChild
                     >
-                        <span className="skew-x-12 flex items-center gap-2">
-                            <Ticket className="w-5 h-5" /> Buy Tickets
-                        </span>
+                        <Link href="https://www.theufl.com/birmingham-tickets" target="_blank" rel="noopener noreferrer">
+                            <span className="skew-x-12 flex items-center gap-2">
+                                <Ticket className="w-5 h-5" /> Buy Tickets
+                            </span>
+                        </Link>
                     </Button>
                     <Button
                         size="lg"
@@ -293,10 +296,13 @@ export default function Hero({
                     <Button
                         size="lg"
                         className="w-full sm:w-auto h-20 px-12 text-2xl font-black bg-secondary text-black hover:bg-white hover:text-black uppercase tracking-tight shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)] transform -skew-x-12 rounded-none transition-all duration-300 hover:translate-y-[-2px] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,0.5)]"
+                        asChild
                     >
-                        <span className="skew-x-12 flex items-center gap-2">
-                            <Ticket className="w-6 h-6" /> Buy Tickets
-                        </span>
+                        <Link href="https://www.theufl.com/birmingham-tickets" target="_blank" rel="noopener noreferrer">
+                            <span className="skew-x-12 flex items-center gap-2">
+                                <Ticket className="w-6 h-6" /> Buy Tickets
+                            </span>
+                        </Link>
                     </Button>
                     <Button
                         size="lg"
