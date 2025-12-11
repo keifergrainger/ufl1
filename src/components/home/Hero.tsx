@@ -180,8 +180,8 @@ export default function Hero({
                     </div>
                 </div>
 
-                {/* 4. COUNTDOWN */}
-                <div className="flex items-center gap-2 mb-auto text-white bg-black/70 px-5 py-2 rounded-full border border-white/10 shadow-lg">
+                {/* 4. COUNTDOWN - Centered with equal spacing */}
+                <div className="flex items-center gap-2 mb-8 text-white bg-black/70 px-5 py-2 rounded-full border border-white/10 shadow-lg">
                     <span className="relative flex h-2 w-2">
                         <span className="absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-60 animate-ping" />
                         <span className="relative inline-flex h-2 w-2 rounded-full bg-lime-400" />

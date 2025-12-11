@@ -71,11 +71,11 @@ export default function NextGameCard({ game }: { game: NextGameData }) {
                                         <div className="text-4xl md:text-6xl font-black uppercase text-white tracking-wide leading-none mb-0 drop-shadow-2xl">
                                             {homeTeamName}
                                         </div>
-                                        <div className="flex items-center gap-3 mt-2">
+                                        <div className="flex flex-col md:flex-row items-center gap-1 md:gap-3 mt-2">
                                             <span className="text-lg font-bold text-muted-foreground uppercase tracking-wider">{homeTeamLocation}</span>
                                             {homeTeamRecord && (
                                                 <>
-                                                    <div className="h-4 w-px bg-white/10" />
+                                                    <div className="hidden md:block h-4 w-px bg-white/10" />
                                                     <span className="text-2xl font-black text-white">{homeTeamRecord}</span>
                                                 </>
                                             )}
@@ -111,11 +111,11 @@ export default function NextGameCard({ game }: { game: NextGameData }) {
                                         <div className="text-4xl md:text-6xl font-black uppercase text-white tracking-wide leading-none mb-0 drop-shadow-2xl">
                                             {awayTeamName}
                                         </div>
-                                        <div className="flex items-center gap-3 mt-2">
+                                        <div className="flex flex-col md:flex-row items-center gap-1 md:gap-3 mt-2">
                                             <span className="text-lg font-bold text-muted-foreground uppercase tracking-wider">{awayTeamLocation}</span>
                                             {awayTeamRecord && (
                                                 <>
-                                                    <div className="h-4 w-px bg-white/10" />
+                                                    <div className="hidden md:block h-4 w-px bg-white/10" />
                                                     <span className="text-2xl font-black text-white">{awayTeamRecord}</span>
                                                 </>
                                             )}
