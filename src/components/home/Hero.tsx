@@ -151,7 +151,7 @@ export default function Hero({
                 </div>
 
                 {/* 2. MAIN HEADLINE */}
-                <h1 className="relative text-5xl font-black uppercase tracking-tighter text-white mb-4 leading-[0.85] italic flex flex-col items-center">
+                <h1 className="relative text-4xl sm:text-5xl font-black uppercase tracking-tighter text-white mb-4 leading-[0.85] italic flex flex-col items-center">
                     <span className="relative inline-block z-10 px-6 py-2 mx-2">
                         {/* Text Span with extra padding for italic safety */}
                         <span className="drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)] relative z-20 inline-block pr-3 italic">{heroTitleHighlight}</span>
@@ -161,7 +161,7 @@ export default function Hero({
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-[shimmer_2s_infinite]" />
                         </div>
                     </span>
-                    <span className="relative inline-block z-10 drop-shadow-[0_5px_10px_rgba(0,0,0,0.75)] mt-3 text-[1.15em]">
+                    <span className="relative inline-block z-10 drop-shadow-[0_5px_10px_rgba(0,0,0,0.75)] mt-3 text-[1.15em] break-all sm:break-normal">
                         {heroTitle}
                     </span>
                 </h1>
