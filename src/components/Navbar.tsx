@@ -65,9 +65,16 @@ export default function Navbar() {
                     <Button
                         variant="ghost"
                         className="hidden sm:flex font-bold uppercase tracking-wider px-4 text-white hover:text-red-500 transition-colors"
-                        onClick={handleMerchClick}
+                        asChild
                     >
-                        Shop
+                        <Link
+                            href="https://shop.theufl.com/shop-by-team/birmingham-stallions/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={handleMerchClick}
+                        >
+                            Shop
+                        </Link>
                     </Button>
 
                     <Button
@@ -109,9 +116,16 @@ export default function Navbar() {
                                     <Button
                                         className="w-full bg-neutral-800 text-white font-bold uppercase"
                                         size="lg"
-                                        onClick={handleMerchClick}
+                                        asChild
                                     >
-                                        Shop Merch
+                                        <Link
+                                            href="https://shop.theufl.com/shop-by-team/birmingham-stallions/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={handleMerchClick}
+                                        >
+                                            Shop Merch
+                                        </Link>
                                     </Button>
                                     <Button
                                         className="w-full bg-secondary text-secondary-foreground font-bold uppercase"
