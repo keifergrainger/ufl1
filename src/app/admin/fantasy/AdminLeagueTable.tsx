@@ -2,17 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow
-} from "@/components/ui/table"; // Assuming standard Shadcn table if exists, otherwise I'll build standard HTML table or verify existence.
-// Wait, I didn't see table.tsx in the list. I saw select, etc. 
-// I'll stick to standard HTML table with Tailwind to be safe and avoid missing component errors.
-// "Use same UI components" - I'll check if I need to use generic standard HTML.
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
