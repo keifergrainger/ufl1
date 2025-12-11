@@ -36,10 +36,15 @@ export default async function AnalyticsPage() {
     })
     const topSection = Object.entries(sectionCounts).sort((a, b) => b[1] - a[1])[0]
 
-    // 4. Returning vs New
-    // Heuristic: Count sessions per visitor
+    // 4. Returning vs New (using same 30-day period)
+    // Fetch visitor sessions within the same period
+    const { data: periodEventsForSessions } = await supabase
+        .from('analytics_events')
+        .select('visitor_id, session_id')
+        .gte('created_at', thirtyDaysAgo.toISOString())
+
     const sessionsPerVisitor: Record<string, Set<string>> = {}
-    recentEvents?.forEach(e => {
+    periodEventsForSessions?.forEach(e => {
         if (e.visitor_id && e.session_id) {
             if (!sessionsPerVisitor[e.visitor_id]) sessionsPerVisitor[e.visitor_id] = new Set()
             sessionsPerVisitor[e.visitor_id].add(e.session_id)
