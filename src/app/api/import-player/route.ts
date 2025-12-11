@@ -1,19 +1,33 @@
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase-server';
 import { NextResponse } from 'next/server';
-
-// Initialize Supabase client
-// NOTE: for production, use a SERVICE ROLE key for write access if RLS is strict.
-// For this "admin123" quick setup, we are using the detailed client or the anon key if policies allow.
-// Assuming the anon key allows 'insert' for 'pending' status as per the schema plan.
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { requireAdmin } from '@/lib/auth';
+import { playerSchema } from '@/lib/schemas';
+import { mutationLimiter } from '@/lib/rate-limit';
 
 export async function POST(request: Request) {
     try {
-        const body = await request.json();
-        const { name, bio, stats, image_url, number, position, height, weight, college, hometown, age_info } = body;
+        const ip = request.headers.get('x-forwarded-for') || '127.0.0.1';
+        try {
+            await mutationLimiter.check(5, ip); // 5 requests per minute per IP
+        } catch {
+            return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
+        }
+
+        const supabase = await createClient();
+        const { authorized } = await requireAdmin(supabase);
+
+        if (!authorized) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+        const json = await request.json();
+        const result = playerSchema.safeParse(json);
+
+        if (!result.success) {
+            return NextResponse.json({ error: "Invalid input", details: result.error.issues }, { status: 400 });
+        }
+
+        const { name, bio, stats, image_url, number, position, height, weight, college, hometown, age_info } = result.data;
 
         // TODO: Add basic validation
 

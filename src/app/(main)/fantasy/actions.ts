@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase-server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { generateJoinCode, startLeagueEngine } from "@/lib/fantasy/engine";
+import { leagueSchema, joinLeagueSchema, updateLeagueSchema } from "@/lib/schemas";
 
 export async function createLeague(formData: FormData) {
     const supabase = await createClient();
@@ -13,25 +14,34 @@ export async function createLeague(formData: FormData) {
         throw new Error("Must be logged in to create a league");
     }
 
-    const name = formData.get("name") as string;
-    const teamName = formData.get("teamName") as string;
-    const teamsCount = parseInt(formData.get("teams") as string);
+    const rawData = {
+        name: formData.get("name"),
+        teamName: formData.get("teamName"),
+        teams: formData.get("teams"),
+        visibility: formData.get("visibility"),
+        customCode: formData.get("customCode") || "",
+    };
+
+    const result = leagueSchema.safeParse(rawData);
+
+    if (!result.success) {
+        throw new Error(result.error.issues[0].message);
+    }
+
+    const { name, teamName, teams: teamsCount, visibility: visibilityStr, customCode } = result.data;
+    const isPublic = visibilityStr === "public";
+
     // Determine season: If after September (Index 8), assume prepping for next Spring season
     const now = new Date();
     const season = now.getMonth() > 8 ? now.getFullYear() + 1 : now.getFullYear();
 
-    const isPublic = formData.get("visibility") === "public";
-
     // Custom Code Logic
-    let code = formData.get("customCode") as string;
+    let code = customCode;
 
     if (code && code.trim().length > 0) {
         // User provided a code
         code = code.toUpperCase().trim();
-        if (code.length !== 6) {
-            throw new Error("Custom code must be exactly 6 characters.");
-        }
-        // Check availability
+        // Schema checks length/regex, but we check uniqueness here
         const { data: existing } = await supabase.from('fantasy_leagues').select('id').eq('league_code', code).single();
         if (existing) {
             throw new Error("This Join Code is already taken. Please choose another.");
@@ -45,10 +55,6 @@ export async function createLeague(formData: FormData) {
     const draftType = 'auto';
     const scoringPreset = 'default';
     const description = '';
-
-    if (!name || !teamsCount || !teamName) {
-        throw new Error("Missing required fields");
-    }
 
     // 1. Create League
     const { data: league, error: leagueError } = await supabase
@@ -105,10 +111,17 @@ export async function joinLeague(formData: FormData) {
 
     if (!user) throw new Error("Must be logged in");
 
-    const code = formData.get("code") as string;
-    const teamName = formData.get("teamName") as string;
+    const rawData = {
+        code: formData.get("code"),
+        teamName: formData.get("teamName"),
+    };
 
-    if (!code || !teamName) return { error: "Missing fields" };
+    const result = joinLeagueSchema.safeParse(rawData);
+    if (!result.success) {
+        return { error: result.error.issues[0].message };
+    }
+
+    const { code, teamName } = result.data;
 
     // 1. Find League
     const { data: league } = await supabase
@@ -279,11 +292,16 @@ export async function updateLeagueDetails(leagueId: string, formData: FormData) 
     const { data: member } = await supabase.from("fantasy_league_members").select("role").eq("league_id", leagueId).eq("user_id", user.id).single();
     if (member?.role !== 'commissioner') throw new Error("Unauthorized");
 
-    const name = formData.get("name") as string;
-    const visibility = formData.get("visibility") as string;
-    const isPublic = visibility === 'public';
+    const rawData = {
+        name: formData.get("name"),
+        visibility: formData.get("visibility"),
+    };
 
-    if (!name) throw new Error("League Name is required");
+    const result = updateLeagueSchema.safeParse(rawData);
+    if (!result.success) throw new Error(result.error.issues[0].message);
+
+    const { name, visibility } = result.data;
+    const isPublic = visibility === 'public';
 
     const { error } = await supabase
         .from('fantasy_leagues')

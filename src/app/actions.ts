@@ -2,13 +2,21 @@
 
 import { createClient } from '@/lib/supabase-server';
 
-export async function subscribeToMailingList(formData: FormData) {
-    const email = formData.get('email') as string;
-    const source = (formData.get('source') as string) || 'web_footer';
+import { subscriptionSchema } from '@/lib/schemas';
 
-    if (!email) {
-        return { error: 'Email is required' };
+export async function subscribeToMailingList(formData: FormData) {
+    const rawData = {
+        email: formData.get('email'),
+        source: formData.get('source') || 'web_footer',
+    };
+
+    const result = subscriptionSchema.safeParse(rawData);
+
+    if (!result.success) {
+        return { error: result.error.issues[0].message };
     }
+
+    const { email, source } = result.data;
 
     const supabase = await createClient();
 

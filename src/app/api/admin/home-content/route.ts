@@ -1,18 +1,26 @@
 import { createClient } from "@/lib/supabase-server";
 import { NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
+import { homeContentSchema } from "@/lib/schemas";
 
 export async function POST(request: Request) {
     const supabase = await createClient();
 
-    // Check auth
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    // Check auth & admin
+    const { authorized } = await requireAdmin(supabase);
+    if (!authorized) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     try {
-        const body = await request.json();
-        const { hero, stats, news } = body;
+        const json = await request.json();
+        const result = homeContentSchema.safeParse(json);
+
+        if (!result.success) {
+            return NextResponse.json({ error: "Validation Error", details: result.error.issues }, { status: 400 });
+        }
+
+        const { hero, stats, news } = result.data;
 
         // 1. Update Hero & Stats in site_settings
         const upserts = [

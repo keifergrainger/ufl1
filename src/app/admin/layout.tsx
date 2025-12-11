@@ -1,38 +1,23 @@
-
 import { createClient } from '@/lib/supabase-server'
-import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { LayoutDashboard, Calendar, Users, Newspaper, History, Settings, LogOut, Ticket, Handshake, Trophy, BarChart, Mail } from 'lucide-react'
+import { LayoutDashboard, Calendar, Users, Newspaper, History, Settings, Ticket, Handshake, Trophy, BarChart, Mail } from 'lucide-react'
 import Branding from '@/components/Branding'
-
-// Temporary allowed list until Role Based Access Control (RBAC) is fully DB-backed
-const ALLOWED_EMAILS = ['admin@stallions.ufl', 'coach@stallions.ufl', 'test@test.com', 'keifer@antigravity.ai', 'keifer.sogo@gmail.com'] // Add your email here or use a wildcard logic
+import { protectAdminRoute } from '@/lib/auth'
+import SignOutButton from './SignOutButton'
+import ViewLiveSiteButton from './ViewLiveSiteButton'
 
 export default async function AdminLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+    // Verify Admin Access
+    await protectAdminRoute();
+
     const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
 
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
-
-    if (!user) {
-        redirect('/login')
-    }
-
-    // Basic Role/Email Check
-    // In a real app, check `user.app_metadata.role` or a `profiles` table.
-    // For now, we fallback to an allowed list to be safe but quick.
-    const isAllowed = ALLOWED_EMAILS.includes(user.email || '') || user.email?.endsWith('@stallions.ufl') || user.app_metadata?.role === 'admin'
-
-    if (!isAllowed) {
-        // Optional: Redirect to a "Unauthorized" page or just home
-        // For this MVP, let's just redirect home
-        redirect('/')
-    }
+    if (!user) return null;
 
     return (
         <div className="min-h-screen bg-black text-white flex">
@@ -68,10 +53,6 @@ export default async function AdminLayout({
                 <div className="p-4 border-t border-white/10 bg-black/20">
                     <div className="text-xs text-neutral-500 mb-2 truncate font-mono">{user.email}</div>
                     <form action="/auth/signout" method="post">
-                        {/* We might need a proper signout route, or just a button that clears cookies client side. 
-                     For now, let's use a simple link to a logout action or client component.
-                     Actually, a Client Component button is better.
-                  */}
                         <SignOutButton />
                     </form>
                 </div>
@@ -99,8 +80,3 @@ function AdminNavLink({ href, icon: Icon, label }: { href: string; icon: any; la
         </Link>
     )
 }
-
-// Simple Client Component for SignOut
-// Simple Client Component for SignOut
-import SignOutButton from './SignOutButton'
-import ViewLiveSiteButton from './ViewLiveSiteButton' 
