@@ -171,7 +171,7 @@ export default async function LeagueOverviewPage({ params }: { params: Promise<{
                         {isCommissioner && (
                             <form action={async () => {
                                 'use server';
-                                const { startLeague } = await import('@/app/fantasy/actions');
+                                const { startLeague } = await import('@/app/(main)/fantasy/actions');
                                 await startLeague(leagueId);
                             }}>
                                 <button type="submit" className="bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg uppercase tracking-wide transition-colors">
