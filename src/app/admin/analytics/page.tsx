@@ -8,18 +8,18 @@ export const dynamic = 'force-dynamic'
 export default async function AnalyticsPage() {
     const supabase = createAdminClient()
 
-    // 1. Total Events (Last 30 Days)
+    // 1. Total Unique Visitors (Last 30 Days)
     const thirtyDaysAgo = new Date()
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
     const { data: periodEvents } = await supabase
         .from('analytics_events')
-        .select('session_id')
+        .select('visitor_id')
         .gte('created_at', thirtyDaysAgo.toISOString())
 
-    // Count unique sessions (Visits) instead of total events (Hits)
-    const uniqueSessions = new Set(periodEvents?.map(e => e.session_id)).size
-    const totalVisits = uniqueSessions
+    // Count unique visitors (based on visitor_id from localStorage, which persists across browser sessions)
+    const uniqueVisitors = new Set(periodEvents?.map(e => e.visitor_id).filter(Boolean)).size
+    const totalVisitors = uniqueVisitors
 
     // 2. Fetch Recent Events for Aggregation
     const { data: recentEvents } = await supabase
@@ -122,7 +122,7 @@ export default async function AnalyticsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <AnalyticsCard
                     label="Total Visitors"
-                    value={totalVisits.toLocaleString()}
+                    value={totalVisitors.toLocaleString()}
                     icon={Users}
                     color="text-blue-500"
                     sparklineData={[40, 30, 45, 50, 60, 55, 70]}
