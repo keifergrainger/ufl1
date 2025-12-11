@@ -13,13 +13,60 @@ const LOG_ENDPOINT = '/api/analytics/log';
 let lastEventKey = '';
 let lastEventTime = 0;
 
-function getVisitorId() {
-    if (typeof window === 'undefined') return undefined; // SSR check
-    let id = localStorage.getItem('visitor_id');
-    if (!id) {
-        id = crypto.randomUUID();
-        localStorage.setItem('visitor_id', id);
+// Generate a browser fingerprint as fallback
+function getBrowserFingerprint(): string {
+    if (typeof window === 'undefined') return '';
+
+    const components = [
+        navigator.userAgent,
+        navigator.language,
+        screen.colorDepth,
+        screen.width,
+        screen.height,
+        new Date().getTimezoneOffset()
+    ];
+
+    // Simple hash function
+    const str = components.join('|');
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32bit integer
     }
+    return 'fp_' + Math.abs(hash).toString(36);
+}
+
+function getVisitorId() {
+    if (typeof window === 'undefined') return undefined;
+
+    // Try to get from localStorage first
+    let id = localStorage.getItem('visitor_id');
+
+    if (!id) {
+        // Check if we have a fingerprint-based ID
+        const fingerprintKey = 'visitor_fingerprint';
+        const storedFingerprint = localStorage.getItem(fingerprintKey);
+        const currentFingerprint = getBrowserFingerprint();
+
+        if (storedFingerprint === currentFingerprint) {
+            // Same browser, localStorage was cleared - restore the ID
+            const fingerprintId = localStorage.getItem('visitor_id_backup');
+            if (fingerprintId) {
+                id = fingerprintId;
+                localStorage.setItem('visitor_id', id);
+            }
+        }
+
+        if (!id) {
+            // Generate new ID
+            id = crypto.randomUUID();
+            localStorage.setItem('visitor_id', id);
+            localStorage.setItem('visitor_id_backup', id);
+            localStorage.setItem(fingerprintKey, currentFingerprint);
+        }
+    }
+
     return id;
 }
 
@@ -83,4 +130,10 @@ export const analytics = {
     logTicketClick: (meta?: any) => {
         logEvent({ eventType: 'ticket_click', section: 'commerce', meta });
     }
+}
+
+// Initialize visitor ID immediately on module load
+if (typeof window !== 'undefined') {
+    // Force visitor ID creation
+    getVisitorId();
 }
