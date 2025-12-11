@@ -76,6 +76,9 @@ export default function HomePreviewPage() {
                         opponent: nextGameRaw.opponent || "TBD",
                         venue: nextGameRaw.venue,
                         broadcaster: nextGameRaw.broadcaster || "FOX",
+                        is_home: nextGameRaw.is_home,
+                        ticket_url: nextGameRaw.ticket_url || "",
+                        stallions_record: "0-0"
                     }
                 }));
             }
