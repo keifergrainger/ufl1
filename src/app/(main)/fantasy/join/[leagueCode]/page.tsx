@@ -84,7 +84,10 @@ export default async function JoinLeaguePage({ params }: PageProps) {
                                     Sorry, this league is full.
                                 </div>
                             ) : (
-                                <form action={joinLeague} className="space-y-4">
+                                <form action={async (formData) => {
+                                    'use server'
+                                    await joinLeague(formData)
+                                }} className="space-y-4">
                                     <input type="hidden" name="code" value={leagueCode} />
                                     <div>
                                         <label htmlFor="teamName" className="block text-sm text-left font-bold text-gray-400 uppercase mb-1">
