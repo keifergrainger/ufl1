@@ -13,6 +13,17 @@ const LOG_ENDPOINT = '/api/analytics/log';
 let lastEventKey = '';
 let lastEventTime = 0;
 
+function generateUUID() {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        return crypto.randomUUID();
+    }
+    // Fallback for insecure contexts (http)
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
 // Generate a browser fingerprint as fallback
 function getBrowserFingerprint(): string {
     if (typeof window === 'undefined') return '';
@@ -60,7 +71,7 @@ function getVisitorId() {
 
         if (!id) {
             // Generate new ID
-            id = crypto.randomUUID();
+            id = generateUUID();
             localStorage.setItem('visitor_id', id);
             localStorage.setItem('visitor_id_backup', id);
             localStorage.setItem(fingerprintKey, currentFingerprint);
@@ -74,7 +85,7 @@ function getSessionId() {
     if (typeof window === 'undefined') return undefined;
     let id = sessionStorage.getItem('session_id');
     if (!id) {
-        id = crypto.randomUUID();
+        id = generateUUID();
         sessionStorage.setItem('session_id', id);
     }
     return id;

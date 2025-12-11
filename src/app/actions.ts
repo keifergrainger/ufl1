@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase-server';
 
 export async function subscribeToMailingList(formData: FormData) {
     const email = formData.get('email') as string;
+    const source = (formData.get('source') as string) || 'web_footer';
 
     if (!email) {
         return { error: 'Email is required' };
@@ -14,7 +15,7 @@ export async function subscribeToMailingList(formData: FormData) {
     try {
         const { error } = await supabase
             .from('mailing_list')
-            .insert({ email, source: 'web_footer' });
+            .insert({ email, source });
 
         if (error) {
             // Handle unique constraint violation gracefully

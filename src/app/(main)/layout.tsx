@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import DisclaimerModal from "@/components/disclaimer/DisclaimerModal";
 import AnalyticsTracker from "@/components/analytics/AnalyticsTracker";
+import InsiderPreviewEntryPoint from "@/components/InsiderPreviewEntryPoint";
 import { Suspense } from "react";
 
 export default function MainLayout({
@@ -20,6 +21,7 @@ export default function MainLayout({
             </main>
             <Footer />
             <DisclaimerModal />
+            <InsiderPreviewEntryPoint />
         </div>
     );
 }
