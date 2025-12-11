@@ -58,6 +58,9 @@ export default function HomePreviewPage() {
             opponent: "DC Defenders",
             venue: "Protective Stadium",
             broadcaster: "FOX",
+            is_home: true,
+            ticket_url: "",
+            stallions_record: "0-0"
         },
         news: [],
     });
