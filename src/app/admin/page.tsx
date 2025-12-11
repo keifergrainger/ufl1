@@ -11,7 +11,7 @@ export default async function AdminDashboard() {
         { count: gamesCount },
         { count: newsCount },
     ] = await Promise.all([
-        supabase.from('players').select('*', { count: 'exact', head: true }),
+        supabase.from('players').select('*', { count: 'exact', head: true }).eq('is_fantasy_only', false).neq('status', 'pending'),
         supabase.from('games').select('*', { count: 'exact', head: true }), // Assuming 'games' table exists or we will create it
         supabase.from('news').select('*', { count: 'exact', head: true }),   // Assuming 'news' table exists
     ])

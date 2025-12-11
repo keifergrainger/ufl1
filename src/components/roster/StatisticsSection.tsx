@@ -112,13 +112,17 @@ export default function StatisticsSection({
                     <StatsBlock
                         title="Defense – Season Stats"
                         stats={defenseStats}
-                        orderedKeys={["GP", "TKL", "SOLO", "AST", "SACKS", "INT", "FF", "FR", "TEAM", "SEASON"]}
+                        orderedKeys={["MISC", "SACKS", "FUMBLES", "TACKLES", "PASS DEFENSE"]}
                         headerMap={{
+                            MISC: "Misc",
+                            SACKS: "Sacks",
+                            FUMBLES: "Fumbles",
+                            TACKLES: "Tackles",
+                            "PASS DEFENSE": "Pass Defense",
                             GP: "Games",
                             TKL: "Total Tkl",
                             SOLO: "Solo",
                             AST: "Ast",
-                            SACKS: "Sacks",
                             INT: "Int",
                             FF: "FF",
                             FR: "FR",

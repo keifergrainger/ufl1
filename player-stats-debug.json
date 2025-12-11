@@ -1,0 +1,52 @@
+[
+  {
+    "name": "A.J. THOMAS",
+    "stats": {
+      "Table 0": [
+        {
+          "GP": "10",
+          "TD": "0",
+          "AVG": "17.0",
+          "LNG": "29",
+          "NO.": "3",
+          "YDS": "51",
+          "Team": "Birmingham Stallions",
+          "Season": "2024 REG"
+        },
+        {
+          "GP": "10",
+          "TD": "0",
+          "AVG": "6.5",
+          "LNG": "11",
+          "NO.": "2",
+          "YDS": "13",
+          "Team": "Birmingham Stallions",
+          "Season": "2025 REG"
+        }
+      ],
+      "Table 1": [
+        {
+          "Misc": "8.0",
+          "Sacks": "2",
+          "Fumbles": "3",
+          "Tackles": "Birmingham Stallions",
+          "Pass Defense": "5"
+        },
+        {
+          "Misc": "23.0",
+          "Sacks": "10",
+          "Fumbles": "9",
+          "Tackles": "Birmingham Stallions",
+          "Pass Defense": "14"
+        },
+        {
+          "Misc": "44.0",
+          "Sacks": "10",
+          "Fumbles": "19",
+          "Tackles": "Birmingham Stallions",
+          "Pass Defense": "25"
+        }
+      ]
+    }
+  }
+]

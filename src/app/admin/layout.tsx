@@ -2,7 +2,7 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { LayoutDashboard, Calendar, Users, Newspaper, History, Settings, LogOut, Ticket, Handshake, Trophy, BarChart } from 'lucide-react'
+import { LayoutDashboard, Calendar, Users, Newspaper, History, Settings, LogOut, Ticket, Handshake, Trophy, BarChart, Mail } from 'lucide-react'
 import Branding from '@/components/Branding'
 
 // Temporary allowed list until Role Based Access Control (RBAC) is fully DB-backed
@@ -55,6 +55,7 @@ export default async function AdminLayout({
 
                     <div className="pt-4 pb-2 px-3 text-xs font-bold text-neutral-500 uppercase tracking-widest">Content</div>
                     <AdminNavLink href="/news" icon={Newspaper} label="News" />
+                    <AdminNavLink href="/emails" icon={Mail} label="Subscribers" />
                     <AdminNavLink href="/history" icon={History} label="History" />
                     <AdminNavLink href="/partners" icon={Handshake} label="Partners" />
 
