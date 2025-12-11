@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import BioSection from "@/components/roster/BioSection";
 import StatisticsSection, { SeasonStatRow } from "@/components/roster/StatisticsSection";
+import LogPlayerView from "@/components/analytics/LogPlayerView";
 
 // Server Component
 export default async function PlayerPage({ params }: { params: { id: string } }) {
@@ -197,6 +198,8 @@ export default async function PlayerPage({ params }: { params: { id: string } })
                 returnStats={returnStats}
                 kickingStats={kickingStats}
             />
+
+            <LogPlayerView playerId={player.id} />
         </div>
     );
 }

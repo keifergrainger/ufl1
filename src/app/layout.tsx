@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -13,11 +14,6 @@ export const metadata: Metadata = {
   description: "Unofficial Fan Concept for the Birmingham Stallions (UFL).",
 };
 
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { Toaster } from "@/components/ui/toaster";
-import DisclaimerModal from "@/components/disclaimer/DisclaimerModal";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -26,12 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${outfit.variable} font-sans antialiased bg-background text-foreground flex flex-col min-h-screen`}>
-        <Navbar />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
-        <DisclaimerModal />
+        {children}
         <Toaster />
       </body>
     </html>

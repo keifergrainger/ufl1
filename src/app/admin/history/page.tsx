@@ -9,7 +9,7 @@ export default async function AdminHistoryPage() {
 
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
-        redirect('/admin')
+        redirect('/')
     }
 
     // Fetch history events sorted by display_order

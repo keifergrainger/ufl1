@@ -9,7 +9,7 @@ export default async function AdminNewsPage() {
 
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
-        redirect('/admin')
+        redirect('/')
     }
 
     // Fetch news

@@ -2,7 +2,7 @@
 import { createClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { LayoutDashboard, Calendar, Users, Newspaper, History, Settings, LogOut, Ticket, Handshake } from 'lucide-react'
+import { LayoutDashboard, Calendar, Users, Newspaper, History, Settings, LogOut, Ticket, Handshake, Trophy, BarChart } from 'lucide-react'
 import Branding from '@/components/Branding'
 
 // Temporary allowed list until Role Based Access Control (RBAC) is fully DB-backed
@@ -43,23 +43,25 @@ export default async function AdminLayout({
                 </div>
 
                 <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-1">
-                    <AdminNavLink href="/admin" icon={LayoutDashboard} label="Dashboard" />
+                    <AdminNavLink href="/" icon={LayoutDashboard} label="Dashboard" />
 
                     <div className="pt-4 pb-2 px-3 text-xs font-bold text-neutral-500 uppercase tracking-widest">Team</div>
-                    <AdminNavLink href="/admin/roster" icon={Users} label="Roster" />
-                    <AdminNavLink href="/admin/coaches" icon={Users} label="Coaches" />
+                    <AdminNavLink href="/roster" icon={Users} label="Roster" />
+                    <AdminNavLink href="/coaches" icon={Users} label="Coaches" />
 
                     <div className="pt-4 pb-2 px-3 text-xs font-bold text-neutral-500 uppercase tracking-widest">Season</div>
-                    <AdminNavLink href="/admin/schedule" icon={Calendar} label="Schedule" />
-                    <AdminNavLink href="/admin/gameday" icon={Ticket} label="Game Day" />
+                    <AdminNavLink href="/schedule" icon={Calendar} label="Schedule" />
+                    <AdminNavLink href="/gameday" icon={Ticket} label="Game Day" />
 
                     <div className="pt-4 pb-2 px-3 text-xs font-bold text-neutral-500 uppercase tracking-widest">Content</div>
-                    <AdminNavLink href="/admin/news" icon={Newspaper} label="News" />
-                    <AdminNavLink href="/admin/history" icon={History} label="History" />
-                    <AdminNavLink href="/admin/partners" icon={Handshake} label="Partners" />
+                    <AdminNavLink href="/news" icon={Newspaper} label="News" />
+                    <AdminNavLink href="/history" icon={History} label="History" />
+                    <AdminNavLink href="/partners" icon={Handshake} label="Partners" />
 
                     <div className="pt-4 pb-2 px-3 text-xs font-bold text-neutral-500 uppercase tracking-widest">System</div>
-                    <AdminNavLink href="/admin/settings" icon={Settings} label="Settings" />
+                    <AdminNavLink href="/analytics" icon={BarChart} label="Analytics" />
+                    <AdminNavLink href="/fantasy" icon={Trophy} label="Fantasy" />
+                    <AdminNavLink href="/settings" icon={Settings} label="Settings" />
                 </nav>
 
                 <div className="p-4 border-t border-white/10 bg-black/20">
@@ -78,9 +80,7 @@ export default async function AdminLayout({
             <main className="flex-1 ml-64 min-h-screen bg-neutral-950">
                 <header className="h-16 border-b border-white/10 bg-black/50 backdrop-blur sticky top-0 z-40 flex items-center justify-between px-8">
                     <h1 className="text-sm font-bold uppercase tracking-wider text-neutral-400">Admin Console</h1>
-                    <Link href="/" className="text-sm font-bold text-red-500 hover:text-white transition-colors">
-                        View Live Site →
-                    </Link>
+                    <ViewLiveSiteButton />
                 </header>
                 <div className="p-8 max-w-7xl mx-auto">
                     {children}
@@ -100,4 +100,6 @@ function AdminNavLink({ href, icon: Icon, label }: { href: string; icon: any; la
 }
 
 // Simple Client Component for SignOut
-import SignOutButton from './SignOutButton' 
+// Simple Client Component for SignOut
+import SignOutButton from './SignOutButton'
+import ViewLiveSiteButton from './ViewLiveSiteButton' 

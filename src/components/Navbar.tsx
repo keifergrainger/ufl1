@@ -8,11 +8,13 @@ import { Button } from "./ui/button";
 import { Menu, Ticket } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { useState } from "react";
+import { analytics } from "@/lib/analytics";
 
 const NAV_LINKS = [
     { href: "/", label: "Home" },
     { href: "/schedule", label: "Schedule" },
     { href: "/roster", label: "Roster" },
+    { href: "/fantasy", label: "Fantasy" },
     { href: "/history", label: "History" },
     { href: "/gameday", label: "Game Day" },
     { href: "/partners", label: "Partners" },
@@ -22,6 +24,16 @@ const NAV_LINKS = [
 export default function Navbar() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
+
+    const handleTicketClick = () => {
+        analytics.logTicketClick();
+        console.log("Ticket clicked");
+    };
+
+    const handleMerchClick = () => {
+        analytics.logMerchClick();
+        console.log("Merch clicked");
+    };
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
@@ -49,9 +61,19 @@ export default function Navbar() {
 
                 {/* Right: Actions */}
                 <div className="flex items-center gap-4">
+                    {/* Merch Link (Added for Analytics Demo) */}
+                    <Button
+                        variant="ghost"
+                        className="hidden sm:flex font-bold uppercase tracking-wider px-4 text-white hover:text-red-500 transition-colors"
+                        onClick={handleMerchClick}
+                    >
+                        Shop
+                    </Button>
+
                     <Button
                         className="hidden sm:flex bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold uppercase tracking-wider px-6"
                         size="lg"
+                        onClick={handleTicketClick}
                     >
                         <Ticket className="w-4 h-4 mr-2" />
                         Buy Tickets
@@ -83,8 +105,19 @@ export default function Navbar() {
                                         </Link>
                                     ))}
                                 </nav>
-                                <div className="mt-4">
-                                    <Button className="w-full bg-secondary text-secondary-foreground font-bold uppercase" size="lg">
+                                <div className="mt-4 space-y-4">
+                                    <Button
+                                        className="w-full bg-neutral-800 text-white font-bold uppercase"
+                                        size="lg"
+                                        onClick={handleMerchClick}
+                                    >
+                                        Shop Merch
+                                    </Button>
+                                    <Button
+                                        className="w-full bg-secondary text-secondary-foreground font-bold uppercase"
+                                        size="lg"
+                                        onClick={handleTicketClick}
+                                    >
                                         Buy Tickets
                                     </Button>
                                 </div>

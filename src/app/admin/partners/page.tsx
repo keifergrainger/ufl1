@@ -9,7 +9,7 @@ export default async function AdminPartnersPage() {
 
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
-        redirect('/admin')
+        redirect('/')
     }
 
     // Fetch partners

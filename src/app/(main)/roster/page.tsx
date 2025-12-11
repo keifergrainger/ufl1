@@ -15,6 +15,7 @@ export default async function RosterPage() {
         .from('players')
         .select('*')
         .eq('active', true)
+        .eq('is_fantasy_only', false)
         .order('number', { ascending: true });
 
     const { data: coaches } = await supabase

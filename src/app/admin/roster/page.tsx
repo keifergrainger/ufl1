@@ -9,6 +9,7 @@ export default async function AdminRosterPage() {
     const { data: players } = await supabase
         .from('players')
         .select('*')
+        .eq('is_fantasy_only', false) // Filter out fantasy-only players so they don't clog up admin
         .order('created_at', { ascending: false }) // Sort by newest first to see imports at top
 
     // Split into pending and active

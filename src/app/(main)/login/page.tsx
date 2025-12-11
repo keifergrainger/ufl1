@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
@@ -11,25 +11,50 @@ export default function LoginPage() {
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [message, setMessage] = useState<string | null>(null)
+    const [isSignUp, setIsSignUp] = useState(false)
+    const [isAdmin, setIsAdmin] = useState(false)
     const router = useRouter()
     const supabase = createClient() // Client-side client
+
+    useEffect(() => {
+        if (typeof window !== 'undefined' && window.location.hostname.startsWith('admin.')) {
+            setIsAdmin(true)
+        }
+    }, [])
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
         setError(null)
+        setMessage(null)
 
         try {
-            const { error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            })
-
-            if (error) {
-                setError(error.message)
+            if (isSignUp) {
+                const { error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        emailRedirectTo: `${location.origin}/auth/callback`,
+                    },
+                })
+                if (error) {
+                    setError(error.message)
+                } else {
+                    setMessage('Check your email for the confirmation link!')
+                }
             } else {
-                router.push('/admin')
-                router.refresh()
+                const { error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password,
+                })
+
+                if (error) {
+                    setError(error.message)
+                } else {
+                    router.push('/fantasy') // Redirect to fantasy hub by default
+                    router.refresh()
+                }
             }
         } catch (err) {
             setError('An unexpected error occurred')
@@ -55,8 +80,12 @@ export default function LoginPage() {
             </div>
 
             <div className="w-full max-w-md bg-neutral-900 border border-white/10 rounded-xl p-8 shadow-2xl">
-                <h1 className="text-2xl font-black uppercase italic text-white mb-2 text-center">Admin Access</h1>
-                <p className="text-neutral-400 text-center mb-6 text-sm">Sign in to manage team content.</p>
+                <h1 className="text-2xl font-black uppercase italic text-white mb-2 text-center">
+                    {isAdmin ? 'Admin Portal' : (isSignUp ? 'Join the Stable' : 'Fan Access')}
+                </h1>
+                <p className="text-neutral-400 text-center mb-6 text-sm">
+                    {isAdmin ? 'Authorized personnel only.' : (isSignUp ? 'Create your account to start your dynasty.' : 'Sign in to access Fantasy and more.')}
+                </p>
 
                 <form onSubmit={handleLogin} className="space-y-4">
                     <div>
@@ -66,7 +95,7 @@ export default function LoginPage() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="w-full bg-black/50 border border-white/10 rounded p-3 text-white focus:border-red-600 focus:outline-none transition-colors"
-                            placeholder="coach@stallions.ufl"
+                            placeholder="fan@stallions.ufl"
                             required
                         />
                     </div>
@@ -88,13 +117,33 @@ export default function LoginPage() {
                         </div>
                     )}
 
+                    {message && (
+                        <div className="bg-green-900/20 border border-green-900/50 text-green-500 text-sm p-3 rounded text-center">
+                            {message}
+                        </div>
+                    )}
+
                     <button
                         type="submit"
                         disabled={loading}
                         className="w-full bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-wider py-3 rounded transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                     >
-                        {loading ? 'Signing In...' : 'Enter Locker Room'}
+                        {loading ? (isSignUp ? 'Creating Account...' : 'Signing In...') : (isSignUp ? 'Create Account' : 'Enter Locker Room')}
                     </button>
+
+                    <div className="text-center pt-2">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setIsSignUp(!isSignUp);
+                                setError(null);
+                                setMessage(null);
+                            }}
+                            className="text-xs text-neutral-400 hover:text-white underline"
+                        >
+                            {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
+                        </button>
+                    </div>
                 </form>
 
                 <div className="mt-6 text-center">
