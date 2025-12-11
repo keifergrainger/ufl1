@@ -23,154 +23,16 @@ export default function StatisticsSection({
     returnStats = [],
     kickingStats = []
 }: StatisticsSectionProps) {
-    const hasStats =
-        (passingStats?.length > 0) ||
-        (rushingStats?.length > 0) ||
-        (receivingStats?.length > 0) ||
-        (defenseStats?.length > 0) ||
-        (returnStats?.length > 0) ||
-        (kickingStats?.length > 0);
-
-    if (!hasStats) {
-        return (
-            <div className="w-full max-w-6xl mx-auto px-4 lg:px-6 mt-12 mb-20 text-center">
-                <div className="text-gray-500 italic">No detailed statistics available.</div>
-            </div>
-        );
-    }
-
     return (
         <section className="w-full max-w-6xl mx-auto px-4 lg:px-6 mt-12 mb-20">
             <h2 className="text-3xl font-black uppercase italic mb-8 border-l-8 border-red-600 pl-4 text-white">
                 Statistics
             </h2>
 
-            <div className="flex flex-col gap-12">
-                {/* PASSING */}
-                {passingStats.length > 0 && (
-                    <StatsBlock
-                        title="Passing – Season Stats"
-                        stats={passingStats}
-                        // Default columns if not found in data, but specific mapping logic handles the labels
-                        orderedKeys={["GP", "TD", "INT", "PCT", "YDS", "AVG", "TEAM", "SEASON"]}
-                        headerMap={{
-                            GP: "Games",
-                            TD: "TD",
-                            INT: "INT",
-                            PCT: "Comp %",
-                            YDS: "Yards",
-                            AVG: "Yds/Att",
-                            TEAM: "Team",
-                            SEASON: "Season",
-                            "C-A-I": "C-A-I",
-                            "EFF": "Rating"
-                        }}
-                    />
-                )}
-
-                {/* RUSHING */}
-                {rushingStats.length > 0 && (
-                    <StatsBlock
-                        title="Rushing – Season Stats"
-                        stats={rushingStats}
-                        orderedKeys={["GP", "ATT", "YDS", "AVG", "LNG", "TD", "TEAM", "SEASON"]}
-                        headerMap={{
-                            GP: "Games",
-                            ATT: "Att",
-                            YDS: "Yards",
-                            AVG: "Yds/Carry",
-                            LNG: "Long",
-                            TD: "TD",
-                            TEAM: "Team",
-                            SEASON: "Season",
-                            NET: "Net Yds"
-                        }}
-                    />
-                )}
-
-                {/* RECEIVING */}
-                {receivingStats.length > 0 && (
-                    <StatsBlock
-                        title="Receiving – Season Stats"
-                        stats={receivingStats}
-                        orderedKeys={["GP", "REC", "YDS", "AVG", "LNG", "TD", "TEAM", "SEASON"]}
-                        headerMap={{
-                            GP: "Games",
-                            REC: "Rec",
-                            YDS: "Yards",
-                            AVG: "Yds/Rec",
-                            LNG: "Long",
-                            TD: "TD",
-                            TEAM: "Team",
-                            SEASON: "Season"
-                        }}
-                    />
-                )}
-
-                {/* DEFENSE */}
-                {defenseStats.length > 0 && (
-                    <StatsBlock
-                        title="Defense – Season Stats"
-                        stats={defenseStats}
-                        orderedKeys={["MISC", "SACKS", "FUMBLES", "TACKLES", "PASS DEFENSE"]}
-                        headerMap={{
-                            MISC: "Misc",
-                            SACKS: "Sacks",
-                            FUMBLES: "Fumbles",
-                            TACKLES: "Tackles",
-                            "PASS DEFENSE": "Pass Defense",
-                            GP: "Games",
-                            TKL: "Total Tkl",
-                            SOLO: "Solo",
-                            AST: "Ast",
-                            INT: "Int",
-                            FF: "FF",
-                            FR: "FR",
-                            TEAM: "Team",
-                            SEASON: "Season"
-                        }}
-                    />
-                )}
-
-                {/* RETURNS */}
-                {returnStats.length > 0 && (
-                    <StatsBlock
-                        title="Returns – Season Stats"
-                        stats={returnStats}
-                        orderedKeys={["GP", "RET", "YDS", "AVG", "LNG", "TD", "TEAM", "SEASON"]}
-                        headerMap={{
-                            GP: "Games",
-                            RET: "Ret",
-                            YDS: "Yards",
-                            AVG: "Avg",
-                            LNG: "Long",
-                            TD: "TD",
-                            TEAM: "Team",
-                            SEASON: "Season"
-                        }}
-                    />
-                )}
-
-                {/* KICKING */}
-                {kickingStats.length > 0 && (
-                    <StatsBlock
-                        title="Kicking – Season Stats"
-                        stats={kickingStats}
-                        orderedKeys={["GP", "FGM", "FGA", "PCT", "LNG", "XPM", "XPA", "PTS", "TEAM", "SEASON"]}
-                        headerMap={{
-                            GP: "Games",
-                            FGM: "FGM",
-                            FGA: "FGA",
-                            PCT: "Pct",
-                            LNG: "Long",
-                            XPM: "XPM",
-                            XPA: "XPA",
-                            PTS: "Pts",
-                            TEAM: "Team",
-                            SEASON: "Season"
-                        }}
-                    />
-                )}
+            <div className="w-full bg-neutral-900/40 border border-white/10 rounded-xl overflow-hidden shadow-sm p-12 text-center">
+                <div className="text-6xl mb-4">📊</div>
+                <h3 className="text-2xl font-black uppercase text-white mb-2">Coming Soon</h3>
+                <p className="text-gray-400">Detailed player statistics will be available shortly.</p>
             </div>
         </section>
     );
