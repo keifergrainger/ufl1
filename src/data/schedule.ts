@@ -12,6 +12,7 @@ export interface Game {
     result?: GameResult;
     score?: string; // e.g. "27-10"
     broadcaster?: string;
+    ticket_url?: string;
 }
 
 export const schedule: Game[] = [
