@@ -9,6 +9,10 @@ type AnalyticsEvent = {
 
 const LOG_ENDPOINT = '/api/analytics/log';
 
+// Track last event to prevent duplicates
+let lastEventKey = '';
+let lastEventTime = 0;
+
 function getVisitorId() {
     if (typeof window === 'undefined') return undefined; // SSR check
     let id = localStorage.getItem('visitor_id');
@@ -31,10 +35,26 @@ function getSessionId() {
 
 async function logEvent(data: AnalyticsEvent) {
     try {
+        const visitorId = getVisitorId();
+        const sessionId = getSessionId();
+
+        // Create unique key for this event
+        const eventKey = `${data.eventType}:${data.page}:${visitorId}`;
+        const now = Date.now();
+
+        // Prevent duplicate events within 5 seconds
+        if (eventKey === lastEventKey && (now - lastEventTime) < 5000) {
+            console.log('Analytics: Skipping duplicate event');
+            return;
+        }
+
+        lastEventKey = eventKey;
+        lastEventTime = now;
+
         const payload = {
             ...data,
-            visitorId: getVisitorId(),
-            sessionId: getSessionId()
+            visitorId,
+            sessionId
         }
         await fetch(LOG_ENDPOINT, {
             method: 'POST',
