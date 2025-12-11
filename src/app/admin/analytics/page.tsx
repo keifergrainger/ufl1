@@ -108,6 +108,24 @@ export default async function AnalyticsPage() {
             }
         })
 
+    // 8. Calculate Player Insights
+    let playerInsight = ''
+    if (topPlayers.length > 0 && Object.keys(playerViews).length > 1) {
+        const totalViews = Object.values(playerViews).reduce((sum, views) => sum + views, 0)
+        const avgViews = totalViews / Object.keys(playerViews).length
+        const topPlayerViews = topPlayers[0].views
+
+        if (topPlayerViews > avgViews * 2) {
+            const multiplier = Math.round(topPlayerViews / avgViews)
+            playerInsight = `Top players are receiving ${multiplier}x more views than average.`
+        } else if (topPlayerViews > avgViews * 1.5) {
+            playerInsight = `Top players are receiving 50% more views than average.`
+        } else {
+            playerInsight = `Player views are evenly distributed across the roster.`
+        }
+    }
+
+
     return (
         <div className="space-y-8">
             <AutoRefresh intervalMs={3000} />
@@ -232,9 +250,15 @@ export default async function AnalyticsPage() {
                             )}
                         </div>
 
-                        <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 text-xs text-blue-400">
-                            <strong>Insight:</strong> Top players are receiving 3x more views than average.
-                        </div>
+                        {playerInsight ? (
+                            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 text-xs text-blue-400">
+                                <strong>Insight:</strong> {playerInsight}
+                            </div>
+                        ) : (
+                            <div className="bg-neutral-900/50 border border-white/5 rounded-lg p-4 text-xs text-neutral-500 italic">
+                                No insight available yet. Visit player pages to generate data.
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
