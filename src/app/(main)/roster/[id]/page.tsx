@@ -20,7 +20,7 @@ export default async function PlayerPage({ params }: { params: { id: string } })
         .eq('id', id)
         .single();
 
-    if (error || !player) {
+    if (error || !player || player.is_fantasy_only) {
         notFound();
     }
 

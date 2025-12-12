@@ -52,7 +52,7 @@ export async function createLeague(formData: FormData) {
     }
 
     // Defaults for simplified UI
-    const draftType = 'auto';
+    const draftType = 'live';
     const scoringPreset = 'default';
     const description = '';
 
@@ -76,7 +76,7 @@ export async function createLeague(formData: FormData) {
 
     if (leagueError) {
         console.error("League creation failed:", leagueError);
-        throw new Error("Failed to create league");
+        throw new Error(`Failed to create league: ${leagueError.message}`);
     }
 
     // 2. Add Creator as Commissioner
